@@ -3,8 +3,13 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const http = require('http');
 const routes = require('./routes');
+const { setupWebsocket } = require('./websocket');
 const app = express();
+const server = http.Server(app);
+
+setupWebsocket(server);
 
 mongoose.connect(
   `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0-iaygp.gcp.mongodb.net/omnistack10?retryWrites=true&w=majority`,
@@ -14,4 +19,4 @@ mongoose.connect(
 app.use(cors({ origin: 'http://localhost:3000' }))
 app.use(express.json());
 app.use(routes);
-app.listen(3333);
+server.listen(3333);
